@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro Territorial</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial;
+  background: #f0f2f5;
+}
+
+.header {
+  background: linear-gradient(90deg, #371859, #2a1242);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header small {
+  font-size: 12px;
+}
+
+.container {
+  padding: 15px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.btn-archivo {
+  background: #28a745;
+}
+
+.btn-enviar {
+  background: linear-gradient(90deg, #371859, #2a1242);
+}
+
+#map {
+  height: 260px;
+  margin-top: 12px;
+  border-radius: 12px;
+}
+
+.preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview img, .preview video {
+  max-width: 100%;
+  border-radius: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Registro Territorial</h2>
+
+  <div class="subheader">
+    <strong>COMUNA 13</strong><br>
+    Belgrano · Núñez · Colegiales<br>
+    <small>Sede: Roosevelt 2489 (Av. Cabildo y Ciudad de la Paz)</small>
+  </div>
+
+  <div class="socials">
+    <span>📷 IG: lla.comuna13</span>
+  </div>
+</div>
+
+<div class="container">
+<div class="card">
+
+<input id="autocomplete" placeholder="Ingresar dirección">
+
+<input id="street" placeholder="Calle">
+<input id="number" placeholder="Altura">
+<input id="city" placeholder="Ciudad">
+<input id="comuna" placeholder="Comuna" readonly>
+
+<textarea id="descripcion" placeholder="Describí las necesidades del vecino"></textarea>
+
+<!-- BOTON CORREGIDO -->
+<button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
+
+<!-- INPUTS OCULTOS -->
+<input type="file" id="archivoInput" accept="image/*,video/*" style="display:none">
+
+<div class="preview" id="preview"></div>
+
+<div id="map"></div>
+
+<button class="btn-enviar" onclick="enviar()">ENVIAR</button>
+
+<p id="status"></p>
+
+</div>
+</div>
+
+<script>
+let autocomplete, map, marker, lat="", lng="";
+let archivoSeleccionado = null;
+
+/* COMUNA */
+function obtenerComuna(lat, lng) {
+  if (lat < -34.55 && lng > -58.45) return "Comuna 13";
+  if (lat < -34.58 && lng > -58.41) return "Comuna 14";
+  if (lat < -34.60 && lng < -58.45) return "Comuna 11";
+  if (lat > -34.60 && lng > -58.42) return "Comuna 1";
+  if (lat > -34.62 && lng < -58.45) return "Comuna 10";
+  return "Otra comuna";
+}
+
+/* MAP + AUTOCOMPLETE */
+function initAutocomplete() {
+
+  autocomplete = new google.maps.places.Autocomplete(
+    document.getElementById('autocomplete'),
+    {
+      types: ['address'],
+      componentRestrictions: { country: "ar" },
+      bounds: {
+        north: -34.526,
+        south: -34.705,
+        east: -58.335,
+        west: -58.531
+      },
+      strictBounds: true
+    }
+  );
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: -34.6037, lng: -58.3816 },
+    zoom: 13
+  });
+
+  marker = new google.maps.Marker({ map: map });
+
+  autocomplete.addListener('place_changed', function () {
+
+    const place = autocomplete.getPlace();
+
+    const esCABA = place.address_components.some(c =>
+      c.long_name.includes("Ciudad Autónoma de Buenos Aires")
+    );
+
+    if (!esCABA) {
+      alert("Solo se permiten direcciones en CABA");
+      return;
+    }
+
+    for (const component of place.address_components) {
+      if (component.types.includes('route'))
+        document.getElementById('street').value = component.long_name;
+
+      if (component.types.includes('street_number'))
+        document.getElementById('number').value = component.long_name;
+
+      if (component.types.includes('locality'))
+        document.getElementById('city').value = component.long_name;
+    }
+
+    lat = place.geometry.location.lat();
+    lng = place.geometry.location.lng();
+
+    document.getElementById('comuna').value = obtenerComuna(lat, lng);
+
+    map.setCenter({ lat, lng });
+    marker.setPosition({ lat, lng });
+  });
+}
+
+/* BOTONES */
+function abrirCamara() {
+  document.getElementById("camaraInput").click();
+}
+
+function abrirArchivo() {
+  document.getElementById("archivoInput").click();
+}
+
+/* PREVIEW */
+function mostrarPreview(file) {
+  const preview = document.getElementById("preview");
+  preview.innerHTML = "";
+
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+
+  if (file.type.startsWith("image")) {
+    preview.innerHTML = `<img src="${url}">`;
+  } else if (file.type.startsWith("video")) {
+    preview.innerHTML = `<video src="${url}" controls></video>`;
+  }
+}
+
+/* EVENTOS */
+
+document.getElementById("archivoInput").addEventListener("change", function(e){
+  archivoSeleccionado = e.target.files[0];
+  mostrarPreview(archivoSeleccionado);
+});
+
+/* ENVIAR */
+function enviar() {
+
+  const file = archivoSeleccionado;
+  const reader = new FileReader();
+
+  reader.onload = function() {
+
+    const data = {
+      address: document.getElementById('autocomplete').value,
+      street: document.getElementById('street').value,
+      number: document.getElementById('number').value,
+      city: document.getElementById('city').value,
+      comuna: document.getElementById('comuna').value,
+      descripcion: document.getElementById('descripcion').value,
+      lat: lat,
+      lng: lng,
+      file: reader.result ? reader.result.split(',')[1] : "",
+      fileName: file ? file.name : ""
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbwE_aXXAe_zg1-YCcwBT2yxe7Uew-q_I1hlYe8hPVFn4MeeaBYeFp3cctjGY0yChGJLZQ/exec", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(() => document.getElementById("status").innerText="✅ Enviado correctamente")
+    .catch(() => document.getElementById("status").innerText="❌ Error al enviar");
+  };
+
+  if (file) reader.readAsDataURL(file);
+  else reader.onload();
+}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_6lb0KlvCCwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
+
+</body>
+</html>
