@@ -108,14 +108,19 @@ button {
 <div class="container">
 <div class="card">
 
-<input id="autocomplete" placeholder="Ingresar dirección">
+  <input id="nombre" type="text" placeholder="Nombre y Apellido">
+  <input id="email" type="email" placeholder="Correo electrónico (ej: vecino@mail.com)">
 
-<input id="street" placeholder="Calle">
-<input id="number" placeholder="Altura">
-<input id="city" placeholder="Ciudad">
-<input id="comuna" placeholder="Comuna" readonly>
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
-<textarea id="descripcion" placeholder="Describí las necesidades del vecino"></textarea>
+  <input id="autocomplete" placeholder="Buscá tu dirección aquí">
+
+  <input id="street" placeholder="Calle" style="background-color: #f9f9f9;">
+  <input id="number" placeholder="Altura" style="background-color: #f9f9f9;">
+  <input id="city" placeholder="Ciudad" style="background-color: #f9f9f9;">
+  <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
+
+  <textarea id="descripcion" placeholder="Describí las necesidades o inquietudes del vecino..."></textarea>
 
 <!-- BOTON CORREGIDO -->
 <button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
