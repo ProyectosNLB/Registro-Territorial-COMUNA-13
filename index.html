@@ -252,18 +252,29 @@ function enviar() {
 
   reader.onload = function() {
 
-    const data = {
-      address: document.getElementById('autocomplete').value,
-      street: document.getElementById('street').value,
-      number: document.getElementById('number').value,
-      city: document.getElementById('city').value,
-      comuna: document.getElementById('comuna').value,
-      descripcion: document.getElementById('descripcion').value,
-      lat: lat,
-      lng: lng,
-      file: reader.result ? reader.result.split(',')[1] : "",
-      fileName: file ? file.name : ""
-    };
+    /* DENTRO DE LA FUNCIÓN enviar() */
+
+const data = {
+  // Datos personales del vecino
+  nombre: document.getElementById('nombre').value,
+  email: document.getElementById('email').value,
+
+  // Ubicación y dirección
+  address: document.getElementById('autocomplete').value,
+  street: document.getElementById('street').value,
+  number: document.getElementById('number').value,
+  city: document.getElementById('city').value,
+  comuna: document.getElementById('comuna').value,
+  
+  // Detalles del reporte
+  descripcion: document.getElementById('descripcion').value,
+  lat: lat,
+  lng: lng,
+  
+  // Manejo de archivos (Foto/Video)
+  file: reader.result ? reader.result.split(',')[1] : "",
+  fileName: file ? file.name : ""
+};
 
     fetch("https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec", {
       method: "POST",
