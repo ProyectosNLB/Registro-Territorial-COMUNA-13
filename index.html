@@ -4,108 +4,109 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Territorial - Comuna 13</title>
-
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Arial; background: #f0f2f5; }
-        .header { background: linear-gradient(90deg, #371859, #2a1242); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000; }
-        .header h2 { margin: 0; font-size: 18px; }
-        .header small { font-size: 12px; }
+        body { margin: 0; font-family: 'Segoe UI', Arial; background: #f0f2f5; color: #333; }
+        .header { background: linear-gradient(90deg, #371859, #2a1242); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .header h2 { margin: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
         .container { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: white; padding: 15px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        input, textarea { width: 100%; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 10px; border: none; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-archivo { background: #28a745; }
-        .btn-archivo:hover { background: #218838; }
-        .btn-enviar { background: linear-gradient(90deg, #371859, #2a1242); }
-        .btn-enviar:hover { opacity: 0.9; }
-        #map { height: 260px; margin-top: 12px; border-radius: 12px; border: 1px solid #ddd; }
-        .preview { margin-top: 10px; text-align: center; }
-        .preview img, .preview video { max-width: 100%; border-radius: 10px; border: 1px solid #eee; }
-        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+        .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        label { font-weight: bold; font-size: 14px; color: #555; margin-top: 15px; display: block; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
+        
+        /* Grid de Categorías */
+        .categorias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .cat-item { display: flex; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 10px; border: 1px solid #eee; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .cat-item:hover { background: #f0f0f0; }
+        .cat-item input { width: auto; margin: 0 10px 0 0; cursor: pointer; }
+        
+        button { width: 100%; padding: 15px; margin-top: 15px; border-radius: 12px; border: none; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-archivo { background: #28a745; margin-bottom: 10px; }
+        .btn-enviar { background: linear-gradient(90deg, #371859, #2a1242); box-shadow: 0 4px 12px rgba(55, 24, 89, 0.3); }
+        
+        #map { height: 220px; margin-top: 15px; border-radius: 14px; border: 1px solid #ddd; }
+        .preview { margin-top: 10px; text-align: center; font-size: 13px; color: #666; }
+        .preview img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
     </style>
 </head>
-
 <body>
 
 <div class="header">
     <h2>Registro Territorial</h2>
-    <div class="subheader">
-        <strong>COMUNA 13</strong><br>
-        Belgrano · Núñez · Colegiales<br>
-        <small>Sede: Roosevelt 2489</small>
-    </div>
+    <div style="font-size: 13px; opacity: 0.9;">Comuna 13: Belgrano · Núñez · Colegiales</div>
 </div>
 
 <div class="container">
     <div class="card">
-        <input id="nombre" type="text" placeholder="Nombre y Apellido">
-        <input id="email" type="email" placeholder="Correo electrónico">
+        <label>Información del Vecino</label>
+        <input id="nombre" type="text" placeholder="Nombre completo">
+        <input id="email" type="email" placeholder="Email de contacto">
 
-        <hr>
-
-        <input id="autocomplete" placeholder="Escribí la dirección del reclamo aquí">
-        <input id="street" placeholder="Calle" style="background-color: #f9f9f9;">
-        <input id="number" placeholder="Altura" style="background-color: #f9f9f9;">
-        
+        <label>Ubicación del Incidente</label>
+        <input id="autocomplete" placeholder="Buscá la dirección exacta aquí...">
         <div style="display: flex; gap: 10px;">
-            <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
-            <input id="barrio" placeholder="Barrio" readonly style="background-color: #e9ecef; font-weight: bold;">
+            <input id="barrio" placeholder="Barrio" readonly style="background-color: #f0f0f0; flex: 2;">
+            <input id="comuna" value="Comuna 13" readonly style="background-color: #f0f0f0; flex: 1; text-align: center;">
         </div>
 
-        <textarea id="descripcion" rows="4" placeholder="Describí las necesidades o inquietudes del vecino..."></textarea>
+        <label>¿Cuál es el motivo del reclamo?</label>
+        <div class="categorias-grid">
+            <label class="cat-item"><input type="checkbox" name="cat" value="Limpieza y Reciclado"> Limpieza</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Seguridad"> Seguridad</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Calles y Veredas"> Veredas/Calles</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Iluminación"> Iluminación</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Plazas y Parques"> Plazas</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Ruidos Molestos"> Ruidos</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Tránsito"> Tránsito</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Otros"> Otros</label>
+        </div>
 
-        <button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
+        <label>Descripción detallada</label>
+        <textarea id="descripcion" rows="4" placeholder="Escribí aquí lo que sucede..."></textarea>
+
+        <button type="button" class="btn-archivo" onclick="abrirArchivo()">📷 Adjuntar Foto o Video</button>
         <input type="file" id="archivoInput" accept="image/*,video/*" style="display:none">
-
         <div class="preview" id="preview"></div>
+        
         <div id="map"></div>
 
         <button class="btn-enviar" onclick="enviar()">ENVIAR REPORTE</button>
-        <p id="status" style="text-align: center; font-weight: bold; margin-top: 15px;"></p>
+        <p id="status" style="text-align: center; font-weight: bold; margin-top: 15px; font-size: 14px;"></p>
     </div>
 </div>
 
 <script>
     let autocomplete, map, marker, lat = "", lng = "";
     let archivoSeleccionado = null;
+    // REEMPLAZAR CON TU URL DE APPS SCRIPT SI CAMBIA
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec";
 
     function initAutocomplete() {
-        autocomplete = new google.maps.places.Autocomplete(
-            document.getElementById('autocomplete'),
-            {
-                types: ['address'],
-                componentRestrictions: { country: "ar" },
-                bounds: { north: -34.526, south: -34.705, east: -58.335, west: -58.531 },
-                strictBounds: true
-            }
-        );
-
+        autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {
+            types: ['address'],
+            componentRestrictions: { country: "ar" }
+        });
         map = new google.maps.Map(document.getElementById("map"), {
             center: { lat: -34.555, lng: -58.455 },
-            zoom: 14
+            zoom: 14,
+            disableDefaultUI: true
         });
-
         marker = new google.maps.Marker({ map: map });
 
         autocomplete.addListener('place_changed', function () {
             const place = autocomplete.getPlace();
             if (!place.geometry) return;
-
-            // Reset campos
+            
+            // Buscar barrio
             document.getElementById('barrio').value = "";
-            document.getElementById('comuna').value = "Comuna 13";
-
             for (const component of place.address_components) {
-                const types = component.types;
-                if (types.includes('route')) document.getElementById('street').value = component.long_name;
-                if (types.includes('street_number')) document.getElementById('number').value = component.long_name;
-                if (types.includes('sublocality_level_1')) document.getElementById('barrio').value = component.long_name;
+                if (component.types.includes('sublocality_level_1')) {
+                    document.getElementById('barrio').value = component.long_name;
+                }
             }
-
+            
             lat = place.geometry.location.lat();
             lng = place.geometry.location.lng();
-
             map.setCenter({ lat, lng });
             marker.setPosition({ lat, lng });
             map.setZoom(17);
@@ -117,31 +118,26 @@
     document.getElementById("archivoInput").addEventListener("change", function(e){
         archivoSeleccionado = e.target.files[0];
         const preview = document.getElementById("preview");
-        preview.innerHTML = "";
-        if (!archivoSeleccionado) return;
-        
-        const url = URL.createObjectURL(archivoSeleccionado);
-        if (archivoSeleccionado.type.startsWith("image")) {
-            preview.innerHTML = `<img src="${url}">`;
-        } else {
-            preview.innerHTML = `<video src="${url}" controls style="max-width:100%"></video>`;
+        if (archivoSeleccionado) {
+            preview.innerHTML = `Archivo listo: <b>${archivoSeleccionado.name}</b>`;
         }
     });
 
     function enviar() {
         const status = document.getElementById("status");
         status.style.color = "blue";
-        status.innerText = "⏳ Procesando reporte e IA...";
+        status.innerText = "⏳ Enviando reporte...";
+
+        const checkboxes = document.querySelectorAll('input[name="cat"]:checked');
+        const categoriasArr = Array.from(checkboxes).map(cb => cb.value);
+        const catFinal = categoriasArr.length > 0 ? categoriasArr.join(", ") : "No especificado";
 
         const data = {
             nombre: document.getElementById('nombre').value,
             email: document.getElementById('email').value,
             address: document.getElementById('autocomplete').value,
-            street: document.getElementById('street').value,
-            number: document.getElementById('number').value,
-            city: "CABA",
-            comuna: document.getElementById('comuna').value,
             barrio: document.getElementById('barrio').value,
+            categoriaVecino: catFinal,
             descripcion: document.getElementById('descripcion').value,
             lat: lat,
             lng: lng,
@@ -154,39 +150,35 @@
             reader.onload = function() {
                 data.file = reader.result.split(',')[1];
                 data.fileName = archivoSeleccionado.name;
-                ejecutarPeticion(data);
+                ejecutarFetch(data);
             };
             reader.readAsDataURL(archivoSeleccionado);
         } else {
-            ejecutarPeticion(data);
+            ejecutarFetch(data);
         }
     }
 
-    function ejecutarPeticion(datos) {
+    function ejecutarFetch(datos) {
         const status = document.getElementById("status");
-        
         fetch(URL_SCRIPT, {
             method: "POST",
-            mode: "no-cors", 
+            mode: "no-cors",
             body: JSON.stringify(datos)
         })
         .then(() => {
             status.style.color = "green";
-            status.innerText = "✅ ¡Enviado! La IA está clasificando tu reporte.";
-            // Limpieza
+            status.innerText = "✅ ¡Enviado! Gracias por sumar tu reporte.";
+            // Limpiar campos básicos
             document.getElementById('descripcion').value = "";
             document.getElementById('preview').innerHTML = "";
             archivoSeleccionado = null;
         })
-        .catch((error) => {
-            console.error("Error:", error);
+        .catch(err => {
             status.style.color = "red";
-            status.innerText = "❌ Error de conexión. Reintentá.";
+            status.innerText = "❌ Error al enviar. Verificá tu conexión.";
         });
     }
 </script>
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_6lb0KlvCCwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
-
 </body>
 </html>
