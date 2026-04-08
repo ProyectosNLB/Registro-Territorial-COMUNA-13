@@ -49,6 +49,7 @@ input, textarea {
   margin-top: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
+  box-sizing: border-box; /* Evita que el padding desborde el ancho */
 }
 
 button {
@@ -60,6 +61,7 @@ button {
   color: white;
   font-size: 15px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .btn-archivo {
@@ -118,14 +120,16 @@ button {
   <input id="street" placeholder="Calle" style="background-color: #f9f9f9;">
   <input id="number" placeholder="Altura" style="background-color: #f9f9f9;">
   <input id="city" placeholder="Ciudad" style="background-color: #f9f9f9;">
-  <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
+  
+  <div style="display: flex; gap: 10px;">
+    <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
+    <input id="barrio" placeholder="Barrio" readonly style="background-color: #e9ecef; font-weight: bold;">
+  </div>
 
   <textarea id="descripcion" placeholder="Describí las necesidades o inquietudes del vecino..."></textarea>
 
-<!-- BOTON CORREGIDO -->
 <button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
 
-<!-- INPUTS OCULTOS -->
 <input type="file" id="archivoInput" accept="image/*,video/*" style="display:none">
 
 <div class="preview" id="preview"></div>
@@ -134,7 +138,7 @@ button {
 
 <button class="btn-enviar" onclick="enviar()">ENVIAR</button>
 
-<p id="status"></p>
+<p id="status" style="text-align: center; font-weight: bold; margin-top: 10px;"></p>
 
 </div>
 </div>
@@ -143,14 +147,10 @@ button {
 let autocomplete, map, marker, lat="", lng="";
 let archivoSeleccionado = null;
 
-/* COMUNA */
-function obtenerComuna(lat, lng) {
-  if (lat < -34.55 && lng > -58.45) return "Comuna 13";
-  if (lat < -34.58 && lng > -58.41) return "Comuna 14";
-  if (lat < -34.60 && lng < -58.45) return "Comuna 11";
-  if (lat > -34.60 && lng > -58.42) return "Comuna 1";
-  if (lat > -34.62 && lng < -58.45) return "Comuna 10";
-  return "Otra comuna";
+/* FUNCIÓN DE APOYO PARA COMUNA SEGÚN COORDENADAS (OPCIONAL SI GOOGLE NO LA DA) */
+function obtenerComunaManual(lat, lng) {
+  if (lat < -34.53 && lat > -34.58 && lng < -58.43 && lng > -58.48) return "Comuna 13";
+  return "CABA";
 }
 
 /* MAP + AUTOCOMPLETE */
@@ -172,18 +172,18 @@ function initAutocomplete() {
   );
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: -34.6037, lng: -58.3816 },
-    zoom: 13
+    center: { lat: -34.555, lng: -58.455 }, // Centrado cerca de Comuna 13
+    zoom: 14
   });
 
   marker = new google.maps.Marker({ map: map });
 
   autocomplete.addListener('place_changed', function () {
-
     const place = autocomplete.getPlace();
+    if (!place.geometry) return;
 
     const esCABA = place.address_components.some(c =>
-      c.long_name.includes("Ciudad Autónoma de Buenos Aires")
+      c.long_name.includes("Ciudad Autónoma de Buenos Aires") || c.long_name.includes("CABA")
     );
 
     if (!esCABA) {
@@ -191,97 +191,91 @@ function initAutocomplete() {
       return;
     }
 
+    // Limpiar campos antes de llenar
+    document.getElementById('barrio').value = "";
+    document.getElementById('comuna').value = "Comuna 13"; // Valor por defecto para tu zona
+
     for (const component of place.address_components) {
-      if (component.types.includes('route'))
+      const types = component.types;
+
+      if (types.includes('route'))
         document.getElementById('street').value = component.long_name;
 
-      if (component.types.includes('street_number'))
+      if (types.includes('street_number'))
         document.getElementById('number').value = component.long_name;
 
-      if (component.types.includes('locality'))
+      if (types.includes('locality'))
         document.getElementById('city').value = component.long_name;
+
+      // EXTRACCIÓN DEL BARRIO (Sublocality)
+      if (types.includes('sublocality_level_1')) {
+        document.getElementById('barrio').value = component.long_name;
+      }
     }
 
     lat = place.geometry.location.lat();
     lng = place.geometry.location.lng();
 
-    document.getElementById('comuna').value = obtenerComuna(lat, lng);
-
     map.setCenter({ lat, lng });
     marker.setPosition({ lat, lng });
+    map.setZoom(16);
   });
-}
-
-/* BOTONES */
-function abrirCamara() {
-  document.getElementById("camaraInput").click();
 }
 
 function abrirArchivo() {
   document.getElementById("archivoInput").click();
 }
 
-/* PREVIEW */
 function mostrarPreview(file) {
   const preview = document.getElementById("preview");
   preview.innerHTML = "";
-
   if (!file) return;
-
   const url = URL.createObjectURL(file);
-
   if (file.type.startsWith("image")) {
     preview.innerHTML = `<img src="${url}">`;
   } else if (file.type.startsWith("video")) {
-    preview.innerHTML = `<video src="${url}" controls></video>`;
+    preview.innerHTML = `<video src="${url}" style="max-width:100%" controls></video>`;
   }
 }
-
-/* EVENTOS */
 
 document.getElementById("archivoInput").addEventListener("change", function(e){
   archivoSeleccionado = e.target.files[0];
   mostrarPreview(archivoSeleccionado);
 });
 
-/* ENVIAR */
 function enviar() {
+  const status = document.getElementById("status");
+  status.innerText = "⏳ Enviando...";
 
   const file = archivoSeleccionado;
   const reader = new FileReader();
 
   reader.onload = function() {
-
-    /* DENTRO DE LA FUNCIÓN enviar() */
-
-const data = {
-  // Datos personales del vecino
-  nombre: document.getElementById('nombre').value,
-  email: document.getElementById('email').value,
-
-  // Ubicación y dirección
-  address: document.getElementById('autocomplete').value,
-  street: document.getElementById('street').value,
-  number: document.getElementById('number').value,
-  city: document.getElementById('city').value,
-  comuna: document.getElementById('comuna').value,
-  
-  // Detalles del reporte
-  descripcion: document.getElementById('descripcion').value,
-  lat: lat,
-  lng: lng,
-  
-  // Manejo de archivos (Foto/Video)
-  file: reader.result ? reader.result.split(',')[1] : "",
-  fileName: file ? file.name : ""
-};
+    const data = {
+      nombre: document.getElementById('nombre').value,
+      email: document.getElementById('email').value,
+      address: document.getElementById('autocomplete').value,
+      street: document.getElementById('street').value,
+      number: document.getElementById('number').value,
+      city: document.getElementById('city').value,
+      comuna: document.getElementById('comuna').value,
+      barrio: document.getElementById('barrio').value, // NUEVO DATO
+      descripcion: document.getElementById('descripcion').value,
+      lat: lat,
+      lng: lng,
+      file: reader.result ? reader.result.split(',')[1] : "",
+      fileName: file ? file.name : ""
+    };
 
     fetch("https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec", {
       method: "POST",
       body: JSON.stringify(data)
     })
-    .then(() => document.getElementById("status").innerText="✅ Enviado correctamente")
-    .catch(() => document.getElementById("status").innerText="❌ Error al enviar");
+    .then(() => {
+      status.innerText="✅ Enviado correctamente";
+      // Limpiar formulario opcionalmente aquí
+    })
+    .catch(() => status.innerText="❌ Error al enviar");
   };
 
   if (file) reader.readAsDataURL(file);
