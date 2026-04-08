@@ -1,286 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro Territorial</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Territorial - Comuna 13</title>
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Arial;
-  background: #f0f2f5;
-}
-
-.header {
-  background: linear-gradient(90deg, #371859, #2a1242);
-  color: white;
-  padding: 15px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-}
-
-.header h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.header small {
-  font-size: 12px;
-}
-
-.container {
-  padding: 15px;
-  max-width: 500px;
-  margin: auto;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-sizing: border-box; /* Evita que el padding desborde el ancho */
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-archivo {
-  background: #28a745;
-}
-
-.btn-enviar {
-  background: linear-gradient(90deg, #371859, #2a1242);
-}
-
-#map {
-  height: 260px;
-  margin-top: 12px;
-  border-radius: 12px;
-}
-
-.preview {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.preview img, .preview video {
-  max-width: 100%;
-  border-radius: 10px;
-}
-</style>
-
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial; background: #f0f2f5; }
+        .header { background: linear-gradient(90deg, #371859, #2a1242); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        .header h2 { margin: 0; font-size: 18px; }
+        .header small { font-size: 12px; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .card { background: white; padding: 15px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 10px; border: none; color: white; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-archivo { background: #28a745; }
+        .btn-archivo:hover { background: #218838; }
+        .btn-enviar { background: linear-gradient(90deg, #371859, #2a1242); }
+        .btn-enviar:hover { opacity: 0.9; }
+        #map { height: 260px; margin-top: 12px; border-radius: 12px; border: 1px solid #ddd; }
+        .preview { margin-top: 10px; text-align: center; }
+        .preview img, .preview video { max-width: 100%; border-radius: 10px; border: 1px solid #eee; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+    </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h2>Registro Territorial</h2>
-
-  <div class="subheader">
-    <strong>COMUNA 13</strong><br>
-    Belgrano · Núñez · Colegiales<br>
-    <small>Sede: Roosevelt 2489 (Av. Cabildo y Ciudad de la Paz)</small>
-  </div>
-
-  <div class="socials">
-    <span>📷 IG: lla.comuna13</span>
-  </div>
+    <h2>Registro Territorial</h2>
+    <div class="subheader">
+        <strong>COMUNA 13</strong><br>
+        Belgrano · Núñez · Colegiales<br>
+        <small>Sede: Roosevelt 2489</small>
+    </div>
 </div>
 
 <div class="container">
-<div class="card">
+    <div class="card">
+        <input id="nombre" type="text" placeholder="Nombre y Apellido">
+        <input id="email" type="email" placeholder="Correo electrónico">
 
-  <input id="nombre" type="text" placeholder="Nombre y Apellido">
-  <input id="email" type="email" placeholder="Correo electrónico (ej: vecino@mail.com)">
+        <hr>
 
-  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        <input id="autocomplete" placeholder="Escribí la dirección del reclamo aquí">
+        <input id="street" placeholder="Calle" style="background-color: #f9f9f9;">
+        <input id="number" placeholder="Altura" style="background-color: #f9f9f9;">
+        
+        <div style="display: flex; gap: 10px;">
+            <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
+            <input id="barrio" placeholder="Barrio" readonly style="background-color: #e9ecef; font-weight: bold;">
+        </div>
 
-  <input id="autocomplete" placeholder="Escribí la dirección de la sugerencia o denuncia aquí">
+        <textarea id="descripcion" rows="4" placeholder="Describí las necesidades o inquietudes del vecino..."></textarea>
 
-  <input id="street" placeholder="Calle" style="background-color: #f9f9f9;">
-  <input id="number" placeholder="Altura" style="background-color: #f9f9f9;">
-  <input id="city" placeholder="Ciudad" style="background-color: #f9f9f9;">
-  
-  <div style="display: flex; gap: 10px;">
-    <input id="comuna" placeholder="Comuna" readonly style="background-color: #e9ecef; font-weight: bold;">
-    <input id="barrio" placeholder="Barrio" readonly style="background-color: #e9ecef; font-weight: bold;">
-  </div>
+        <button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
+        <input type="file" id="archivoInput" accept="image/*,video/*" style="display:none">
 
-  <textarea id="descripcion" placeholder="Describí las necesidades o inquietudes del vecino..."></textarea>
+        <div class="preview" id="preview"></div>
+        <div id="map"></div>
 
-<button type="button" class="btn-archivo" onclick="abrirArchivo()">📁 Subir foto o video</button>
-
-<input type="file" id="archivoInput" accept="image/*,video/*" style="display:none">
-
-<div class="preview" id="preview"></div>
-
-<div id="map"></div>
-
-<button class="btn-enviar" onclick="enviar()">ENVIAR</button>
-
-<p id="status" style="text-align: center; font-weight: bold; margin-top: 10px;"></p>
-
-</div>
+        <button class="btn-enviar" onclick="enviar()">ENVIAR REPORTE</button>
+        <p id="status" style="text-align: center; font-weight: bold; margin-top: 15px;"></p>
+    </div>
 </div>
 
 <script>
-let autocomplete, map, marker, lat="", lng="";
-let archivoSeleccionado = null;
+    let autocomplete, map, marker, lat = "", lng = "";
+    let archivoSeleccionado = null;
+    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec";
 
-/* FUNCIÓN DE APOYO PARA COMUNA SEGÚN COORDENADAS (OPCIONAL SI GOOGLE NO LA DA) */
-function obtenerComunaManual(lat, lng) {
-  if (lat < -34.53 && lat > -34.58 && lng < -58.43 && lng > -58.48) return "Comuna 13";
-  return "CABA";
-}
+    function initAutocomplete() {
+        autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('autocomplete'),
+            {
+                types: ['address'],
+                componentRestrictions: { country: "ar" },
+                bounds: { north: -34.526, south: -34.705, east: -58.335, west: -58.531 },
+                strictBounds: true
+            }
+        );
 
-/* MAP + AUTOCOMPLETE */
-function initAutocomplete() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -34.555, lng: -58.455 },
+            zoom: 14
+        });
 
-  autocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('autocomplete'),
-    {
-      types: ['address'],
-      componentRestrictions: { country: "ar" },
-      bounds: {
-        north: -34.526,
-        south: -34.705,
-        east: -58.335,
-        west: -58.531
-      },
-      strictBounds: true
-    }
-  );
+        marker = new google.maps.Marker({ map: map });
 
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: -34.555, lng: -58.455 }, // Centrado cerca de Comuna 13
-    zoom: 14
-  });
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) return;
 
-  marker = new google.maps.Marker({ map: map });
+            // Reset campos
+            document.getElementById('barrio').value = "";
+            document.getElementById('comuna').value = "Comuna 13";
 
-  autocomplete.addListener('place_changed', function () {
-    const place = autocomplete.getPlace();
-    if (!place.geometry) return;
+            for (const component of place.address_components) {
+                const types = component.types;
+                if (types.includes('route')) document.getElementById('street').value = component.long_name;
+                if (types.includes('street_number')) document.getElementById('number').value = component.long_name;
+                if (types.includes('sublocality_level_1')) document.getElementById('barrio').value = component.long_name;
+            }
 
-    const esCABA = place.address_components.some(c =>
-      c.long_name.includes("Ciudad Autónoma de Buenos Aires") || c.long_name.includes("CABA")
-    );
+            lat = place.geometry.location.lat();
+            lng = place.geometry.location.lng();
 
-    if (!esCABA) {
-      alert("Solo se permiten direcciones en CABA");
-      return;
-    }
-
-    // Limpiar campos antes de llenar
-    document.getElementById('barrio').value = "";
-    document.getElementById('comuna').value = "Comuna 13"; // Valor por defecto para tu zona
-
-    for (const component of place.address_components) {
-      const types = component.types;
-
-      if (types.includes('route'))
-        document.getElementById('street').value = component.long_name;
-
-      if (types.includes('street_number'))
-        document.getElementById('number').value = component.long_name;
-
-      if (types.includes('locality'))
-        document.getElementById('city').value = component.long_name;
-
-      // EXTRACCIÓN DEL BARRIO (Sublocality)
-      if (types.includes('sublocality_level_1')) {
-        document.getElementById('barrio').value = component.long_name;
-      }
+            map.setCenter({ lat, lng });
+            marker.setPosition({ lat, lng });
+            map.setZoom(17);
+        });
     }
 
-    lat = place.geometry.location.lat();
-    lng = place.geometry.location.lng();
+    function abrirArchivo() { document.getElementById("archivoInput").click(); }
 
-    map.setCenter({ lat, lng });
-    marker.setPosition({ lat, lng });
-    map.setZoom(16);
-  });
-}
+    document.getElementById("archivoInput").addEventListener("change", function(e){
+        archivoSeleccionado = e.target.files[0];
+        const preview = document.getElementById("preview");
+        preview.innerHTML = "";
+        if (!archivoSeleccionado) return;
+        
+        const url = URL.createObjectURL(archivoSeleccionado);
+        if (archivoSeleccionado.type.startsWith("image")) {
+            preview.innerHTML = `<img src="${url}">`;
+        } else {
+            preview.innerHTML = `<video src="${url}" controls style="max-width:100%"></video>`;
+        }
+    });
 
-function abrirArchivo() {
-  document.getElementById("archivoInput").click();
-}
+    function enviar() {
+        const status = document.getElementById("status");
+        status.style.color = "blue";
+        status.innerText = "⏳ Procesando reporte e IA...";
 
-function mostrarPreview(file) {
-  const preview = document.getElementById("preview");
-  preview.innerHTML = "";
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  if (file.type.startsWith("image")) {
-    preview.innerHTML = `<img src="${url}">`;
-  } else if (file.type.startsWith("video")) {
-    preview.innerHTML = `<video src="${url}" style="max-width:100%" controls></video>`;
-  }
-}
+        const data = {
+            nombre: document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('autocomplete').value,
+            street: document.getElementById('street').value,
+            number: document.getElementById('number').value,
+            city: "CABA",
+            comuna: document.getElementById('comuna').value,
+            barrio: document.getElementById('barrio').value,
+            descripcion: document.getElementById('descripcion').value,
+            lat: lat,
+            lng: lng,
+            file: "",
+            fileName: ""
+        };
 
-document.getElementById("archivoInput").addEventListener("change", function(e){
-  archivoSeleccionado = e.target.files[0];
-  mostrarPreview(archivoSeleccionado);
-});
+        if (archivoSeleccionado) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                data.file = reader.result.split(',')[1];
+                data.fileName = archivoSeleccionado.name;
+                ejecutarPeticion(data);
+            };
+            reader.readAsDataURL(archivoSeleccionado);
+        } else {
+            ejecutarPeticion(data);
+        }
+    }
 
-function enviar() {
-  const status = document.getElementById("status");
-  status.innerText = "⏳ Enviando...";
-
-  const file = archivoSeleccionado;
-  const reader = new FileReader();
-
-  reader.onload = function() {
-    const data = {
-      nombre: document.getElementById('nombre').value,
-      email: document.getElementById('email').value,
-      address: document.getElementById('autocomplete').value,
-      street: document.getElementById('street').value,
-      number: document.getElementById('number').value,
-      city: document.getElementById('city').value,
-      comuna: document.getElementById('comuna').value,
-      barrio: document.getElementById('barrio').value, // NUEVO DATO
-      descripcion: document.getElementById('descripcion').value,
-      lat: lat,
-      lng: lng,
-      file: reader.result ? reader.result.split(',')[1] : "",
-      fileName: file ? file.name : ""
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec", {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
-    .then(() => {
-      status.innerText="✅ Enviado correctamente";
-      // Limpiar formulario opcionalmente aquí
-    })
-    .catch(() => status.innerText="❌ Error al enviar");
-  };
-
-  if (file) reader.readAsDataURL(file);
-  else reader.onload();
-}
+    function ejecutarPeticion(datos) {
+        const status = document.getElementById("status");
+        
+        fetch(URL_SCRIPT, {
+            method: "POST",
+            mode: "no-cors", 
+            body: JSON.stringify(datos)
+        })
+        .then(() => {
+            status.style.color = "green";
+            status.innerText = "✅ ¡Enviado! La IA está clasificando tu reporte.";
+            // Limpieza
+            document.getElementById('descripcion').value = "";
+            document.getElementById('preview').innerHTML = "";
+            archivoSeleccionado = null;
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            status.style.color = "red";
+            status.innerText = "❌ Error de conexión. Reintentá.";
+        });
+    }
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_6lb0KlvCCwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
