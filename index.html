@@ -13,15 +13,13 @@
         label { font-weight: bold; font-size: 14px; color: #555; margin-top: 15px; display: block; }
         input, textarea { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
         .categorias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .cat-item { display: flex; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 10px; border: 1px solid #eee; font-size: 13px; cursor: pointer; transition: 0.2s; }
-        .cat-item:hover { background: #f0f0f0; }
-        .cat-item input { width: auto; margin: 0 10px 0 0; cursor: pointer; }
+        .cat-item { display: flex; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 10px; border: 1px solid #eee; font-size: 13px; cursor: pointer; }
+        .cat-item input { width: auto; margin: 0 10px 0 0; }
         button { width: 100%; padding: 15px; margin-top: 15px; border-radius: 12px; border: none; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-archivo { background: #28a745; margin-bottom: 10px; }
         .btn-enviar { background: linear-gradient(90deg, #371859, #2a1242); box-shadow: 0 4px 12px rgba(55, 24, 89, 0.3); }
-        .btn-enviar:disabled { background: #ccc; cursor: not-allowed; }
-        #map { height: 220px; margin-top: 15px; border-radius: 14px; border: 1px solid #ddd; }
-        .preview { margin-top: 10px; text-align: left; font-size: 13px; color: #666; line-height: 1.4; }
+        #map { height: 200px; margin-top: 15px; border-radius: 14px; border: 1px solid #ddd; }
+        .preview { margin-top: 10px; text-align: left; font-size: 13px; color: #666; }
     </style>
 </head>
 <body>
@@ -29,7 +27,6 @@
 <div class="header">
     <h2>Registro Territorial</h2>
     <div style="font-size: 13px; opacity: 0.9;">Comuna 13: Belgrano · Núñez · Colegiales</div>
-    <div style="font-size: 13px; opacity: 0.9;">Sede: Roosevelt 2489</div>
 </div>
 
 <div class="container">
@@ -47,12 +44,12 @@
 
         <label>¿Cuál es el motivo del reclamo?</label>
         <div class="categorias-grid">
-            <label class="cat-item"><input type="checkbox" name="cat" value="Limpieza y Reciclado"> Limpieza</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Limpieza"> Limpieza</label>
             <label class="cat-item"><input type="checkbox" name="cat" value="Seguridad"> Seguridad</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Calles y Veredas"> Veredas/Calles</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Veredas"> Veredas/Calles</label>
             <label class="cat-item"><input type="checkbox" name="cat" value="Iluminación"> Iluminación</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Plazas y Parques"> Plazas</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Ruidos Molestos"> Ruidos</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Plazas"> Plazas</label>
+            <label class="cat-item"><input type="checkbox" name="cat" value="Ruidos"> Ruidos</label>
             <label class="cat-item"><input type="checkbox" name="cat" value="Tránsito"> Tránsito</label>
             <label class="cat-item"><input type="checkbox" name="cat" value="Otros"> Otros</label>
         </div>
@@ -74,7 +71,9 @@
 <script>
     let autocomplete, map, marker, lat = "", lng = "";
     let fotosSeleccionadas = [];
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxVAOvbbEP4lQLoeb1poHRhbCS1wRW5hCIZlFH4ekt1egFAQXc4WsPgL-Wc4KE95GDe/exec";
+    
+    // RECUERDA ACTUALIZAR ESTA URL CON TU NUEVA IMPLEMENTACIÓN
+    const URL_SCRIPT = "TU_NUEVA_URL_DE_APPS_SCRIPT_AQUI";
 
     function initAutocomplete() {
         autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {
@@ -102,17 +101,10 @@
     function abrirArchivo() { document.getElementById("archivoInput").click(); }
 
     document.getElementById("archivoInput").addEventListener("change", function(e){
-        // Filtro estricto de seguridad para solo imágenes
         const seleccion = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
         fotosSeleccionadas = seleccion.slice(0, 3);
-        
-        const preview = document.getElementById("preview");
-        if (fotosSeleccionadas.length > 0) {
-            preview.innerHTML = `<b>Fotos listas (${fotosSeleccionadas.length}):</b><br>` + 
-                               fotosSeleccionadas.map(f => `- ${f.name}`).join("<br>");
-        } else {
-            preview.innerHTML = "<span style='color:orange;'>Solo se permiten archivos de imagen.</span>";
-        }
+        document.getElementById("preview").innerHTML = fotosSeleccionadas.length > 0 ? 
+            `<b>Fotos seleccionadas:</b> ${fotosSeleccionadas.length}` : "";
     });
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -125,25 +117,21 @@
     async function enviar() {
         const btn = document.getElementById("btnEnviar");
         const status = document.getElementById("status");
-        
-        if (!lat || !lng) {
-            status.innerText = "❌ Por favor, selecciona una dirección del buscador.";
-            return;
-        }
+        if (!lat) { status.innerText = "❌ Selecciona una dirección."; return; }
 
         btn.disabled = true;
         status.style.color = "blue";
-        status.innerText = "⏳ Subiendo fotos y analizando con IA...";
+        status.innerText = "⏳ Enviando...";
 
         const checkboxes = document.querySelectorAll('input[name="cat"]:checked');
-        const catFinal = Array.from(checkboxes).map(cb => cb.value).join(", ") || "No especificado";
+        const catTexto = Array.from(checkboxes).map(cb => cb.value).join(", ");
 
         const data = {
             nombre: document.getElementById('nombre').value,
             email: document.getElementById('email').value,
             address: document.getElementById('autocomplete').value,
             barrio: document.getElementById('barrio').value,
-            categoriaVecino: catFinal,
+            categoriaVecino: catTexto,
             descripcion: document.getElementById('descripcion').value,
             lat: lat, lng: lng,
             files: []
@@ -151,43 +139,21 @@
 
         try {
             for (let foto of fotosSeleccionadas) {
-                const base64Content = await toBase64(foto);
-                data.files.push({
-                    base64: base64Content.split(',')[1],
-                    name: foto.name
-                });
+                const b64 = await toBase64(foto);
+                data.files.push({ base64: b64.split(',')[1], name: foto.name });
             }
-            ejecutarFetch(data);
-        } catch (err) {
-            status.innerText = "❌ Error al procesar las imágenes.";
-            btn.disabled = false;
-        }
-    }
-
-    function ejecutarFetch(datos) {
-        const status = document.getElementById("status");
-        const btn = document.getElementById("btnEnviar");
-        
-        fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(datos) })
-        .then(res => res.json())
-        .then(result => {
-            if (result.result === "success") {
-                status.style.color = "green";
-                status.innerText = "✅ ¡Reporte enviado con éxito!";
-                // Limpiar campos
-                document.getElementById('descripcion').value = "";
-                document.getElementById('nombre').value = "";
-                document.getElementById('email').value = "";
-                document.getElementById('autocomplete').value = "";
-                document.getElementById('preview').innerHTML = "";
-                fotosSeleccionadas = [];
-            } else { throw new Error(result.error); }
-        })
-        .catch(err => {
-            status.style.color = "red";
-            status.innerText = "❌ Error al conectar con la base de datos.";
-        })
-        .finally(() => { btn.disabled = false; });
+            fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(data) })
+            .then(res => res.json())
+            .then(result => {
+                if (result.result === "success") {
+                    status.style.color = "green"; status.innerText = "✅ ¡Enviado!";
+                    setTimeout(() => location.reload(), 2000);
+                } else { throw new Error(); }
+            }).catch(() => {
+                status.style.color = "red"; status.innerText = "❌ Error.";
+                btn.disabled = false;
+            });
+        } catch (e) { btn.disabled = false; }
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_6lb0KlvCCwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
