@@ -1,163 +1,302 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Territorial - Comuna 13</title>
+    <title>Registro Territorial COMUNA 13</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; }
-        .header { background: linear-gradient(90deg, #371859, #2a1242); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .header h2 { margin: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .container { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        label { font-weight: bold; font-size: 14px; color: #555; margin-top: 15px; display: block; }
-        input, textarea { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
-        .categorias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .cat-item { display: flex; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 10px; border: 1px solid #eee; font-size: 13px; cursor: pointer; }
-        .cat-item input { width: auto; margin: 0 10px 0 0; }
-        button { width: 100%; padding: 15px; margin-top: 15px; border-radius: 12px; border: none; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-archivo { background: #28a745; margin-bottom: 10px; }
-        .btn-enviar { background: linear-gradient(90deg, #371859, #2a1242); box-shadow: 0 4px 12px rgba(55, 24, 89, 0.3); }
-        #map { height: 200px; margin-top: 15px; border-radius: 14px; border: 1px solid #ddd; }
-        .preview { margin-top: 10px; text-align: left; font-size: 13px; color: #666; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            background-color: #0056b3;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 20px 0;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .btn-cat {
+            padding: 12px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .btn-cat.active {
+            background: #0056b3;
+            color: white;
+            border-color: #004085;
+        }
+        .btn-enviar {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .btn-enviar:hover { background-color: #218838; }
+        .btn-enviar:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .btn-archivo {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        .preview img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        #map {
+            height: 250px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2>Registro Territorial</h2>
-    <div style="font-size: 13px; opacity: 0.9;">Comuna 13: Belgrano · Núñez · Colegiales</div>
-    <div style="font-size: 13px; opacity: 0.9;">Sede: Roosevelt 2489</div>
-</div>
+    <div class="header">Registro Territorial Comuna 13</div>
 
-<div class="container">
-    <div class="card">
-        <label>Información del Vecino</label>
-        <input id="nombre" type="text" placeholder="Nombre y Apellido">
-        <input id="email" type="email" placeholder="Email de contacto">
+    <div class="container">
+        <div class="card">
+            <label>Información del Vecino</label>
+            <input id="nombre" type="text" placeholder="Nombre y Apellido">
+            <input id="email" type="email" placeholder="Email de contacto">
 
-        <label>Ubicación del Incidente</label>
-        <input id="autocomplete" placeholder="Buscá la dirección exacta aquí...">
-        <div style="display: flex; gap: 10px;">
-            <input id="barrio" placeholder="Barrio" readonly style="background-color: #f0f0f0; flex: 2;">
-            <input id="comuna" value="Comuna 13" readonly style="background-color: #f0f0f0; flex: 1; text-align: center;">
+            <label>Ubicación del Incidente</label>
+            <input id="autocomplete" type="placeholder" placeholder="Buscá la dirección exacta aquí...">
+            <div style="display: flex; gap: 10px;">
+                <input id="barrio" type="text" placeholder="Barrio" readonly>
+                <input id="comuna" type="text" placeholder="Comuna" value="Comuna 13" readonly>
+            </div>
+
+            <label>¿Cuál es el motivo del reclamo?</label>
+            <div class="categorias-grid">
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Iluminación</button>
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Veredas</button>
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Limpieza</button>
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Seguridad</button>
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Tránsito</button>
+                <button class="btn-cat" onclick="seleccionarCategoria(this)">Otros</button>
+            </div>
+
+            <label>Descripción detallada</label>
+            <textarea id="descripcion" rows="4" placeholder="Escribí aquí lo que sucede..."></textarea>
+
+            <button type="button" class="btn-archivo" onclick="abrirArchivo()">📷 Adjuntar Fotos (Máx. 3)</button>
+            <input type="file" id="archivoInput" accept="image/*" style="display:none" multiple>
+            <div class="preview" id="preview"></div>
+
+            <div id="map"></div>
+
+            <button id="btnEnviar" class="btn-enviar" onclick="enviar()">ENVIAR REPORTE</button>
+            <p id="status" style="text-align: center; font-weight: bold; margin-top: 15px; font-size: 14px;"></p>
         </div>
-
-        <label>¿Cuál es el motivo del reclamo?</label>
-        <label>Seleccione una opción</label>
-        <div class="categorias-grid">
-            <label class="cat-item"><input type="checkbox" name="cat" value="Limpieza"> Limpieza</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Seguridad"> Seguridad</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Veredas"> Veredas/Calles</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Iluminación"> Iluminación</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Plazas"> Plazas</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Ruidos"> Ruidos</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Tránsito"> Tránsito</label>
-            <label class="cat-item"><input type="checkbox" name="cat" value="Otros"> Otros</label>
-        </div>
-
-        <label>Descripción detallada</label>
-        <textarea id="descripcion" rows="4" placeholder="Escribí aquí lo que sucede..."></textarea>
-
-        <button type="button" class="btn-archivo" onclick="abrirArchivo()">📷 Adjuntar Fotos (Máx. 3)</button>
-        <input type="file" id="archivoInput" accept="image/*" style="display:none" multiple>
-        <div class="preview" id="preview"></div>
-        
-        <div id="map"></div>
-
-        <button id="btnEnviar" class="btn-enviar" onclick="enviar()">ENVIAR REPORTE</button>
-        <p id="status" style="text-align: center; font-weight: bold; margin-top: 15px; font-size: 14px;"></p>
     </div>
-</div>
 
-<script>
-    let autocomplete, map, marker, lat = "", lng = "";
-    let fotosSeleccionadas = [];
-    
-    // RECUERDA ACTUALIZAR ESTA URL CON TU NUEVA IMPLEMENTACIÓN
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwI31glzKLO5B0P2qm_4jSTwMi6xJhZqeD4rzMcHxfOnXSvIDq2gycHnFxVkHp7C_ZZhQ/exec";
+    <script>
+        // LÍNEA 66: REEMPLAZÁ EL TEXTO ENTRE COMILLAS CON TU URL DE APPS SCRIPT QUE TERMINA EN /exec
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwI31glzKLO5B0P2qm_4jSTwMi6xJhZqeD4rzMcHxfOnXSvIDq2gycHnFxVkHp7C_ZZhQ/exec";
 
-    function initAutocomplete() {
-        autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {
-            types: ['address'], componentRestrictions: { country: "ar" }
-        });
-        map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: -34.555, lng: -58.455 }, zoom: 14, disableDefaultUI: true
-        });
-        marker = new google.maps.Marker({ map: map });
-        autocomplete.addListener('place_changed', function () {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) return;
-            document.getElementById('barrio').value = "";
-            for (const component of place.address_components) {
-                if (component.types.includes('sublocality_level_1')) document.getElementById('barrio').value = component.long_name;
-            }
-            lat = place.geometry.location.lat();
-            lng = place.geometry.location.lng();
-            map.setCenter({ lat, lng });
-            marker.setPosition({ lat, lng });
-            map.setZoom(17);
-        });
-    }
+        let map, marker, autocomplete;
+        let lat = -34.555, lng = -34.555; // Ubicación por defecto inicial (CABA)
+        let catTexto = "";
+        let fotosSeleccionadas = [];
 
-    function abrirArchivo() { document.getElementById("archivoInput").click(); }
-
-    document.getElementById("archivoInput").addEventListener("change", function(e){
-        const seleccion = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
-        fotosSeleccionadas = seleccion.slice(0, 3);
-        document.getElementById("preview").innerHTML = fotosSeleccionadas.length > 0 ? 
-            `<b>Fotos seleccionadas:</b> ${fotosSeleccionadas.length}` : "";
-    });
-
-    const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-
-    async function enviar() {
-        const btn = document.getElementById("btnEnviar");
-        const status = document.getElementById("status");
-        if (!lat) { status.innerText = "❌ Selecciona una dirección."; return; }
-
-        btn.disabled = true;
-        status.style.color = "blue";
-        status.innerText = "⏳ Enviando IA análisis...";
-
-        const checkboxes = document.querySelectorAll('input[name="cat"]:checked');
-        const catTexto = Array.from(checkboxes).map(cb => cb.value).join(", ");
-
-        const data = {
-            nombre: document.getElementById('nombre').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('autocomplete').value,
-            barrio: document.getElementById('barrio').value,
-            categoriaVecino: catTexto,
-            descripcion: document.getElementById('descripcion').value,
-            lat: lat, lng: lng,
-            files: []
-        };
-
-        try {
-            for (let foto of fotosSeleccionadas) {
-                const b64 = await toBase64(foto);
-                data.files.push({ base64: b64.split(',')[1], name: foto.name });
-            }
-            fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(data) })
-            .then(res => res.json())
-            .then(result => {
-                if (result.result === "success") {
-                    status.style.color = "green"; status.innerText = "✅ ¡Enviado!";
-                    setTimeout(() => location.reload(), 2000);
-                } else { throw new Error(); }
-            }).catch(() => {
-                status.style.color = "red"; status.innerText = "❌ Error.";
-                btn.disabled = false;
+        function initAutocomplete() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.5546, lng: -58.4641}, // Centro en Belgrano/Colegiales
+                zoom: 14
             });
-        } catch (e) { btn.disabled = false; }
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_6lb0KlvCCwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
+
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                position: {lat: -34.5546, lng: -58.4641}
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function() {
+                let pos = marker.getPosition();
+                lat = pos.lat();
+                lng = pos.lng();
+            });
+
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'));
+            autocomplete.bindTo('bounds', map);
+
+            autocomplete.addListener('place_changed', function() {
+                let place = autocomplete.getPlace();
+                if (!place.geometry) return;
+
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                }
+
+                marker.setPosition(place.geometry.location);
+                lat = place.geometry.location.lat();
+                lng = place.geometry.location.lng();
+
+                // Intentar extraer el barrio automáticamente
+                document.getElementById('barrio').value = "";
+                for (let component of place.address_components) {
+                    if (component.types.includes("sublocality_level_1") || component.types.includes("neighborhood")) {
+                        document.getElementById('barrio').value = component.long_name;
+                        break;
+                    }
+                }
+            });
+        }
+
+        function seleccionarCategoria(elemento) {
+            document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active'));
+            elemento.classList.add('active');
+            catTexto = elemento.innerText;
+        }
+
+        function abrirArchivo() {
+            document.getElementById('archivoInput').click();
+        }
+
+        document.getElementById('archivoInput').addEventListener('change', function(e) {
+            let files = Array.from(e.target.files).slice(0, 3);
+            fotosSeleccionadas = files;
+            let previewContainer = document.getElementById('preview');
+            previewContainer.innerHTML = "";
+
+            files.forEach(file => {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    let img = document.createElement('img');
+                    img.src = event.target.result;
+                    previewContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function enviar() {
+            let status = document.getElementById('status');
+            let btn = document.getElementById('btnEnviar');
+
+            status.style.color = "blue";
+            status.innerText = "⏳ Procesando y enviando reporte...";
+            btn.disabled = true;
+
+            const data = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('autocomplete').value,
+                barrio: document.getElementById('barrio').value,
+                categoriaVecino: catTexto,
+                descripcion: document.getElementById('descripcion').value,
+                lat: lat, lng: lng,
+                files: []
+            };
+
+            try {
+                for (let foto of fotosSeleccionadas) {
+                    const b64 = await toBase64(foto);
+                    data.files.push({ base64: b64.split(',')[1], name: foto.name });
+                }
+
+                // FETCH CORREGIDO CON MODE NO-CORS PARA EVITAR EL BLOQUEO
+                fetch(URL_SCRIPT, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    status.style.color = "green"; 
+                    status.innerText = "   ¡Enviado con éxito!";
+                    setTimeout(() => location.reload(), 2000);
+                })
+                .catch(() => {
+                    status.style.color = "red"; 
+                    status.innerText = "❌ Error al enviar al servidor.";
+                    btn.disabled = false;
+                });
+
+            } catch (e) {
+                status.style.color = "red";
+                status.innerText = "❌ Error en el procesamiento de datos.";
+                btn.disabled = false;
+            }
+        }
+    </script>
+
+    <!-- Script de Google Maps con la API Key del proyecto -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT_61b0K1vCcwju4H2dhqhtIN6cU-3fkI&libraries=places&callback=initAutocomplete" async defer></script>
 </body>
 </html>
