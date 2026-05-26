@@ -125,7 +125,7 @@
             <input id="email" type="email" placeholder="Email de contacto">
 
             <label>Ubicación del Incidente</label>
-            <input id="autocomplete" type="placeholder" placeholder="Buscá la dirección exacta aquí...">
+            <input id="autocomplete" type="text" placeholder="Buscá la dirección exacta aquí...">
             <div style="display: flex; gap: 10px;">
                 <input id="barrio" type="text" placeholder="Barrio" readonly>
                 <input id="comuna" type="text" placeholder="Comuna" value="Comuna 13" readonly>
@@ -156,17 +156,17 @@
     </div>
 
     <script>
-        // LÍNEA 66: REEMPLAZÁ EL TEXTO ENTRE COMILLAS CON TU URL DE APPS SCRIPT QUE TERMINA EN /exec
-        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwI31glzKLO5B0P2qm_4jSTwMi6xJhZqeD4rzMcHxfOnXSvIDq2gycHnFxVkHp7C_ZZhQ/exec";
+        // LÍNEA 66: Recordá pegar acá tu URL de Apps Script (la que termina en /exec)
+        const URL_SCRIPT = "TU_URL_DE_APPS_SCRIPT_AQUÍ";
 
         let map, marker, autocomplete;
-        let lat = -34.555, lng = -34.555; // Ubicación por defecto inicial (CABA)
+        let lat = -34.5546, lng = -58.4641; // Ubicación por defecto inicial (Comuna 13)
         let catTexto = "";
         let fotosSeleccionadas = [];
 
         function initAutocomplete() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.5546, lng: -58.4641}, // Centro en Belgrano/Colegiales
+                center: {lat: -34.5546, lng: -58.4641}, 
                 zoom: 14
             });
 
@@ -200,7 +200,6 @@
                 lat = place.geometry.location.lat();
                 lng = place.geometry.location.lng();
 
-                // Intentar extraer el barrio automáticamente
                 document.getElementById('barrio').value = "";
                 for (let component of place.address_components) {
                     if (component.types.includes("sublocality_level_1") || component.types.includes("neighborhood")) {
@@ -270,7 +269,6 @@
                     data.files.push({ base64: b64.split(',')[1], name: foto.name });
                 }
 
-                // FETCH CORREGIDO CON MODE NO-CORS PARA EVITAR EL BLOQUEO
                 fetch(URL_SCRIPT, {
                     method: "POST",
                     mode: "no-cors",
@@ -296,7 +294,6 @@
         }
     </script>
 
-    <!-- Script de Google Maps con la API Key del proyecto -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2c1nvtGmc-BdBg2OELMgK0DK5gdRkJ1E&libraries=places&callback=initAutocomplete" async defer></script>
 </body>
 </html>
