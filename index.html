@@ -156,24 +156,26 @@
     </div>
 
     <script>
-        // LÍNEA 66: Recordá pegar acá tu URL de Apps Script (la que termina en /exec)
-        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwE7S5NiDDuGfasiE8D0sHyGmryikYny1GxiKBqInw5AJLWn11kzP9Zc9qFMFUGm7MApg/exec";
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwI31glzKLO5B0P2qm_4jSTwMi6xJhZqeD4rzMcHxfOnXSvIDq2gycHnFxVkHp7C_ZZhQ/exec";
 
         let map, marker, autocomplete;
-        let lat = -34.5546, lng = -58.4641; // Ubicación por defecto inicial (Comuna 13)
+        
+        // CORRECCIÓN: Valores por defecto realistas para Belgrano / CABA (Evita coordenadas erróneas en el Atlántico)
+        let lat = -34.5546; 
+        let lng = -58.4641; 
         let catTexto = "";
         let fotosSeleccionadas = [];
 
         function initAutocomplete() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.5546, lng: -58.4641}, 
+                center: {lat: lat, lng: lng},
                 zoom: 14
             });
 
             marker = new google.maps.Marker({
                 map: map,
                 draggable: true,
-                position: {lat: -34.5546, lng: -58.4641}
+                position: {lat: lat, lng: lng}
             });
 
             google.maps.event.addListener(marker, 'dragend', function() {
@@ -259,7 +261,8 @@
                 barrio: document.getElementById('barrio').value,
                 categoriaVecino: catTexto,
                 descripcion: document.getElementById('descripcion').value,
-                lat: lat, lng: lng,
+                lat: lat, 
+                lng: lng,
                 files: []
             };
 
@@ -277,7 +280,7 @@
                 })
                 .then(() => {
                     status.style.color = "green"; 
-                    status.innerText = "   ¡Enviado con éxito!";
+                    status.innerText = "¡Enviado con éxito!";
                     setTimeout(() => location.reload(), 2000);
                 })
                 .catch(() => {
@@ -294,6 +297,6 @@
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzH8TRNjd9C408Q7b-t6xPPYLqy7KbG9g&libraries=places&callback=initAutocomplete" async defer></script>
-  </body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2c1nvtGmc-BdBg2OELMgK0DK5gdRkJ1E&libraries=places&callback=initAutocomplete" async defer></script>
+</body>
 </html>
