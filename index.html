@@ -144,8 +144,8 @@
             <label>Descripción detallada</label>
             <textarea id="descripcion" rows="4" placeholder="Escribí aquí lo que sucede..."></textarea>
 
-            <button type="button" class="btn-archivo" onclick="abrirArchivo()">📷 Adjuntar Fotos (Máx. 3)</button>
-            <input type="file" id="archivoInput" accept="image/*" style="display:none" multiple>
+            <button type="button" class="btn-archivo" onclick="abrirArchivo()">📷 Adjuntar Foto (Máx. 1)</button>
+            <input type="file" id="archivoInput" accept="image/*" style="display:none">
             <div class="preview" id="preview"></div>
 
             <div id="map"></div>
@@ -224,7 +224,7 @@
         }
 
         document.getElementById('archivoInput').addEventListener('change', function(e) {
-            let files = Array.from(e.target.files).slice(0, 3);
+            let files = Array.from(e.target.files).slice(0, 1); // Forzamos límite estricto de 1 foto
             fotosSeleccionadas = files;
             let previewContainer = document.getElementById('preview');
             previewContainer.innerHTML = "";
